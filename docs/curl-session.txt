@@ -1,0 +1,79 @@
+$ curl -i http://localhost:3000/tasks/1
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 47
+ETag: W/"2f-EZyice6DeBfMm07WI5VF2SVjyRE"
+Date: Thu, 03 Sep 2026 15:35:27 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":1,"title":"Read MDN on HTTP","done":true}
+
+$ curl -i http://localhost:3000/tasks/99
+HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 29
+ETag: W/"1d-kQQdPQ+i/Wk9IgXh55Kh5auGltk"
+Date: Thu, 03 Sep 2026 15:35:27 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"error":"Task 99 not found"}
+
+$ curl -i -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{"title":"Buy milk"}'
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 40
+ETag: W/"28-PpSBYV7i68cXyGc7AhjVpkZkY5Q"
+Date: Thu, 03 Sep 2026 15:35:27 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":4,"title":"Buy milk","done":false}
+
+$ curl -i -X POST http://localhost:3000/tasks -H "Content-Type: application/json" -d '{}'
+HTTP/1.1 400 Bad Request
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 37
+ETag: W/"25-LEtpP7qUAlu2Hw866G4hio+GMZY"
+Date: Thu, 03 Sep 2026 15:35:28 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"error":"Field 'title' is required"}
+
+$ curl -i -X PUT http://localhost:3000/tasks/4 -H "Content-Type: application/json" -d '{"done":true}'
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 39
+ETag: W/"27-ZhsA3ndHmg5rzj6oV6Q55aYo09U"
+Date: Thu, 03 Sep 2026 15:35:28 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":4,"title":"Buy milk","done":true}
+
+$ curl -i -X DELETE http://localhost:3000/tasks/4
+HTTP/1.1 204 No Content
+X-Powered-By: Express
+Date: Thu, 03 Sep 2026 15:35:28 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+
+$ curl -i http://localhost:3000/tasks
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 150
+ETag: W/"96-xtt32iQ5xWFXumf/kSXnWa3r2GA"
+Date: Thu, 03 Sep 2026 15:35:28 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"id":1,"title":"Read MDN on HTTP","done":true},{"id":2,"title":"Build the CRUD API","done":false},{"id":3,"title":"Push it to GitHub","done":false}]
