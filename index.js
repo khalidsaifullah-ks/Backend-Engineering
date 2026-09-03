@@ -127,6 +127,59 @@ app.post("/tasks", (req, res) => {
 });
 
 // ---------------------------------------------------------------------------
+// Stage 4 - Update and Delete.
+// ---------------------------------------------------------------------------
+
+app.put("/tasks/:id", (req, res) => {
+  const id = parseId(req.params.id);
+  const task = findTask(id);
+
+  if (!task) {
+    return res.status(404).json({ error: `Task ${req.params.id} not found` });
+  }
+
+  const body = req.body ?? {};
+
+  // An empty body is meaningless for an update - say so instead of guessing.
+  if (body.title === undefined && body.done === undefined) {
+    return res
+      .status(400)
+      .json({ error: "Body must contain 'title' and/or 'done'" });
+  }
+
+  if (body.title !== undefined) {
+    const titleError = validateTitle(body.title);
+    if (titleError) {
+      return res.status(400).json({ error: titleError });
+    }
+  }
+
+  const doneError = validateDone(body.done);
+  if (doneError) {
+    return res.status(400).json({ error: doneError });
+  }
+
+  if (body.title !== undefined) task.title = body.title.trim();
+  if (body.done !== undefined) task.done = body.done;
+
+  res.json(task);
+});
+
+app.delete("/tasks/:id", (req, res) => {
+  const id = parseId(req.params.id);
+  const index = tasks.findIndex((task) => task.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({ error: `Task ${req.params.id} not found` });
+  }
+
+  tasks.splice(index, 1);
+
+  // 204 No Content - it worked, and there is nothing left to say.
+  res.status(204).send();
+});
+
+// ---------------------------------------------------------------------------
 // Fallbacks - an API should answer JSON even when things go wrong.
 // ---------------------------------------------------------------------------
 
