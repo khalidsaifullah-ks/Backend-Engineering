@@ -1,0 +1,23 @@
+{
+  "name": "auth-api",
+  "version": "1.0.0",
+  "description": "FlyRank Internship W2/A4 - secure API with Supabase Auth: signup, login, logout, protected routes",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file=.env index.js"
+  },
+  "keywords": [
+    "express",
+    "auth",
+    "supabase",
+    "jwt"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@supabase/supabase-js": "2.45.4",
+    "express": "5.1.0",
+    "swagger-ui-express": "5.0.1"
+  }
+}
