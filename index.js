@@ -4,6 +4,9 @@ const express = require("express");
 const app = express();
 const PORT = 3000;
 
+// Parse JSON request bodies. Without this, req.body is undefined.
+app.use(express.json());
+
 // ---------------------------------------------------------------------------
 // Stage 2 - the "database": a plain JavaScript array.
 // In-memory means fast and simple, and gone the moment this process stops.
@@ -27,6 +30,31 @@ function findTask(id) {
 /** Turns a path parameter into a number, or NaN if it is not one. */
 function parseId(raw) {
   return /^\d+$/.test(raw) ? Number(raw) : NaN;
+}
+
+/**
+ * Stage 3 - validation. The server never trusts the client.
+ * Returns an error string, or null when the title is acceptable.
+ */
+function validateTitle(title) {
+  if (title === undefined || title === null) {
+    return "Field 'title' is required";
+  }
+  if (typeof title !== "string") {
+    return "Field 'title' must be a string";
+  }
+  if (title.trim() === "") {
+    return "Field 'title' must not be empty";
+  }
+  return null;
+}
+
+/** Validates the optional `done` flag. Returns an error string or null. */
+function validateDone(done) {
+  if (done !== undefined && typeof done !== "boolean") {
+    return "Field 'done' must be a boolean";
+  }
+  return null;
 }
 
 // ---------------------------------------------------------------------------
@@ -67,6 +95,53 @@ app.get("/tasks/:id", (req, res) => {
   }
 
   res.json(task);
+});
+
+// ---------------------------------------------------------------------------
+// Stage 3 - Create.
+// ---------------------------------------------------------------------------
+
+app.post("/tasks", (req, res) => {
+  const body = req.body ?? {};
+
+  const titleError = validateTitle(body.title);
+  if (titleError) {
+    return res.status(400).json({ error: titleError });
+  }
+
+  const doneError = validateDone(body.done);
+  if (doneError) {
+    return res.status(400).json({ error: doneError });
+  }
+
+  const task = {
+    id: nextId++,
+    title: body.title.trim(),
+    done: body.done ?? false,
+  };
+
+  tasks.push(task);
+
+  // 201 Created - "done, and here is your receipt".
+  res.status(201).json(task);
+});
+
+// ---------------------------------------------------------------------------
+// Fallbacks - an API should answer JSON even when things go wrong.
+// ---------------------------------------------------------------------------
+
+// Unknown path -> 404 JSON instead of Express' default HTML page.
+app.use((req, res) => {
+  res.status(404).json({ error: `No endpoint for ${req.method} ${req.path}` });
+});
+
+// Body that is not valid JSON -> 400 JSON instead of an HTML stack trace.
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    return res.status(400).json({ error: "Request body is not valid JSON" });
+  }
+  console.error(err);
+  res.status(500).json({ error: "Internal server error" });
 });
 
 app.listen(PORT, () => {
