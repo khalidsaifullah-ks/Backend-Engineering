@@ -1,0 +1,24 @@
+{
+  "name": "llm-behind-api",
+  "version": "1.0.0",
+  "description": "FlyRank Internship W7/A17 - triage endpoint backed by an LLM, with schema validation, repair retries, timeout, retry policy, cost logging and a kill switch",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --env-file=.env index.js",
+    "eval": "node --env-file=.env evals/run.js"
+  },
+  "keywords": [
+    "express",
+    "llm",
+    "openai",
+    "zod"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "5.1.0",
+    "openai": "4.68.4",
+    "zod": "3.23.8"
+  }
+}
