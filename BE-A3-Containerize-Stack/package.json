@@ -1,0 +1,23 @@
+{
+  "name": "task-api",
+  "version": "1.0.0",
+  "description": "FlyRank Internship W1/A3 - the A2 CRUD API, now backed by Postgres in Docker",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "express",
+    "crud",
+    "rest",
+    "postgres",
+    "docker"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "5.1.0",
+    "pg": "8.13.1"
+  }
+}
