@@ -73,8 +73,8 @@ Interactive docs are served at [http://localhost:3000/docs](http://localhost:300
 Protected routes show a lock icon; click **Authorize**, paste an access token,
 then **Try it out** on `GET /protected/profile`.
 
-_Screenshot: add `docs/swagger-ui.png` here after running the server against a
-real Supabase project._
+![Swagger UI - authorized protected route](docs/swagger-ui.png)
+![Swagger UI - authorize dialog](docs/swagger-ui-authorize.png)
 
 ## Architecture notes
 
