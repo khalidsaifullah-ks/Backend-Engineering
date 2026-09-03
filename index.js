@@ -1,11 +1,31 @@
 // Task API - an in-memory CRUD to-do API (FlyRank W2/A1, Express lane).
 const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+
+const openapiSpec = require("./openapi.json");
 
 const app = express();
 const PORT = 3000;
 
 // Parse JSON request bodies. Without this, req.body is undefined.
 app.use(express.json());
+
+// ---------------------------------------------------------------------------
+// Stage 5 - Swagger UI. openapi.json describes the API; this page renders it
+// as interactive docs with a "Try it out" button on every endpoint.
+// ---------------------------------------------------------------------------
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openapiSpec, {
+    customSiteTitle: "Task API docs",
+  })
+);
+
+// The raw spec, for tools that want to read it instead of look at it.
+app.get("/openapi.json", (req, res) => {
+  res.json(openapiSpec);
+});
 
 // ---------------------------------------------------------------------------
 // Stage 2 - the "database": a plain JavaScript array.
