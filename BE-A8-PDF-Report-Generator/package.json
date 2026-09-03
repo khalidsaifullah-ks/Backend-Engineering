@@ -1,0 +1,19 @@
+{
+  "name": "pdf-report-generator",
+  "version": "1.0.0",
+  "description": "FlyRank Internship W4/A8 - query, render, store, serve a PDF report",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "seed": "node seed.js",
+    "report:test": "node test-report.js"
+  },
+  "keywords": ["express", "sqlite", "playwright", "pdf"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "5.1.0",
+    "playwright": "1.48.2"
+  }
+}
