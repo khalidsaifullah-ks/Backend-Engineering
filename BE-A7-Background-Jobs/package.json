@@ -1,0 +1,23 @@
+{
+  "name": "background-job-api",
+  "version": "1.0.0",
+  "description": "FlyRank Internship W4/A7 - background jobs and cron with Inngest",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev:inngest": "npx inngest-cli@latest dev -u http://localhost:3000/api/inngest"
+  },
+  "keywords": [
+    "express",
+    "inngest",
+    "background-jobs",
+    "cron"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "5.1.0",
+    "inngest": "3.54.1"
+  }
+}

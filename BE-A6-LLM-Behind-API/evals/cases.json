@@ -1,0 +1,10 @@
+[
+  { "text": "I was charged $49 twice this month for the same subscription.", "expectedCategory": "billing" },
+  { "text": "The export button crashes the app every time I click it on Safari.", "expectedCategory": "bug" },
+  { "text": "Could you add support for exporting reports to CSV?", "expectedCategory": "feature" },
+  { "text": "hey", "expectedCategory": "other" },
+  { "text": "My invoice from last month shows the wrong tax amount, please fix it urgently.", "expectedCategory": "billing" },
+  { "text": "App froze and I lost an hour of unsaved work, this is really bad.", "expectedCategory": "bug" },
+  { "text": "It would be nice to have dark mode someday, no rush.", "expectedCategory": "feature" },
+  { "text": "asdkjaskjd 1234 ??? nothing makes sense here", "expectedCategory": "other" }
+]
