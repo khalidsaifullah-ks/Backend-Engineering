@@ -12,7 +12,9 @@ docker compose up
 
 That's it — `api` (this app) and `db` (Postgres) both start, the `tasks`
 table is created automatically, and three example tasks are seeded on first
-run. The API is at `http://localhost:3000`.
+run. The API is at `http://localhost:3001` (mapped from the container's port
+3000 — 3001 was chosen to avoid clashing with other local services; change
+the host port in `compose.yaml` if you'd rather use 3000).
 
 To stop: `docker compose down` (add `-v` only if you want to wipe the data
 volume too).
@@ -46,7 +48,7 @@ See `.env.example`. Only one variable is needed:
 ## Example
 
 ```bash
-curl -i http://localhost:3000/tasks
+curl -i http://localhost:3001/tasks
 ```
 
 ```
@@ -59,6 +61,11 @@ Content-Type: application/json; charset=utf-8
   {"id":3,"title":"Push it to GitHub","done":false}
 ]
 ```
+
+Verified live: `docker compose up` brought up both containers (db healthy,
+then api), all 5 CRUD endpoints returned correct status codes (200/201/204/
+404) against Postgres, `/health` reported `db: "ok"`, and data survived a
+full `docker compose down` + `up` cycle.
 
 ## Persistence
 
