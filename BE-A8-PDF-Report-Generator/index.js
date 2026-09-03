@@ -19,10 +19,35 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
+function todayStart() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d.toISOString();
+}
+
 // POST /reports - runs the whole pipeline right here: query, render to
 // reports/<id>.pdf, insert the row. Takes a few seconds; that is allowed.
+//
+// Idempotent by default: a report already generated today is handed back
+// as-is (200, not 201) instead of making a duplicate file. A double-clicked
+// "generate" button should produce one report, not two - pass
+// { "force": true } to skip the check and always render a fresh copy.
 app.post("/reports", async (req, res, next) => {
   try {
+    const force = req.body?.force === true;
+
+    if (!force) {
+      const existing = db
+        .prepare(
+          "SELECT * FROM reports WHERE created_at >= ? ORDER BY created_at DESC LIMIT 1"
+        )
+        .get(todayStart());
+
+      if (existing) {
+        return res.status(200).json({ id: existing.id, file: `/reports/${existing.id}/file` });
+      }
+    }
+
     const data = getReportData();
     const insert = db
       .prepare("INSERT INTO reports (path, created_at) VALUES (?, ?)")
