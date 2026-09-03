@@ -95,13 +95,67 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
+// Extras - the server computes an answer instead of just handing back storage.
+app.get("/stats", (req, res) => {
+  const done = tasks.filter((task) => task.done).length;
+  res.json({
+    total: tasks.length,
+    done,
+    open: tasks.length - done,
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Stage 2 - Read.
 // ---------------------------------------------------------------------------
 
-// List every task.
+// List tasks. Query parameters filter, search and paginate - they never
+// identify a resource, which is why they live after the "?" and not in the path.
 app.get("/tasks", (req, res) => {
-  res.json(tasks);
+  const { done, search, limit, offset } = req.query;
+  let result = tasks;
+
+  // ?done=true / ?done=false
+  if (done !== undefined) {
+    if (done !== "true" && done !== "false") {
+      return res
+        .status(400)
+        .json({ error: "Query 'done' must be 'true' or 'false'" });
+    }
+    const wanted = done === "true";
+    result = result.filter((task) => task.done === wanted);
+  }
+
+  // ?search=milk
+  if (search !== undefined) {
+    const needle = String(search).toLowerCase();
+    result = result.filter((task) =>
+      task.title.toLowerCase().includes(needle)
+    );
+  }
+
+  // ?limit=2&offset=2 - real APIs never promise to return "everything".
+  let start = 0;
+  if (offset !== undefined) {
+    if (!/^\d+$/.test(offset)) {
+      return res
+        .status(400)
+        .json({ error: "Query 'offset' must be a non-negative integer" });
+    }
+    start = Number(offset);
+  }
+
+  let end = result.length;
+  if (limit !== undefined) {
+    if (!/^\d+$/.test(limit) || Number(limit) === 0) {
+      return res
+        .status(400)
+        .json({ error: "Query 'limit' must be a positive integer" });
+    }
+    end = start + Number(limit);
+  }
+
+  res.json(result.slice(start, end));
 });
 
 // Read one task. `:id` is a path parameter - the changing piece of the URL.
@@ -197,6 +251,13 @@ app.delete("/tasks/:id", (req, res) => {
 
   // 204 No Content - it worked, and there is nothing left to say.
   res.status(204).send();
+});
+
+// Extras - throw the list away and put the three seed tasks back.
+app.post("/reset", (req, res) => {
+  tasks = SEED_TASKS.map((task) => ({ ...task }));
+  nextId = SEED_TASKS.length + 1;
+  res.json(tasks);
 });
 
 // ---------------------------------------------------------------------------
