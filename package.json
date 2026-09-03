@@ -1,0 +1,21 @@
+{
+  "name": "task-api",
+  "version": "1.0.0",
+  "description": "FlyRank Internship W2/A1 - a small in-memory CRUD to-do API built with Express",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "express",
+    "crud",
+    "rest",
+    "openapi"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "5.1.0"
+  }
+}
